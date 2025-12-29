@@ -62,7 +62,7 @@ cd ../backend
 
 #### 4.1 复制环境变量文件
 ```bash
-cp .env.example .env
+cp .env .env
 ```
 
 #### 4.2 编辑.env文件

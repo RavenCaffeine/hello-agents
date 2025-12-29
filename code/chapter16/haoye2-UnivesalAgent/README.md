@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 ```bash
 # 创建.env文件
-cp .env.example .env
+cp .env .env
 
 # 编辑.env文件，填入你的API密钥
 LLM_API_KEY=your_api_key_here

@@ -1,6 +1,6 @@
 import re
 from llm_client import HelloAgentsLLM
-from tools import ToolExecutor, search
+from tools import ToolExecutor, search,calculator
 
 # (此处省略 REACT_PROMPT_TEMPLATE 的定义)
 REACT_PROMPT_TEMPLATE = """
@@ -91,6 +91,16 @@ if __name__ == '__main__':
     tool_executor = ToolExecutor()
     search_desc = "一个网页搜索引擎。当你需要回答关于时事、事实以及在你的知识库中找不到的信息时，应使用此工具。"
     tool_executor.registerTool("Search", search_desc, search)
-    agent = ReActAgent(llm_client=llm, tool_executor=tool_executor)
+    #agent = ReActAgent(llm_client=llm, tool_executor=tool_executor)
     question = "华为最新的手机是哪一款？它的主要卖点是什么？"
-    agent.run(question)
+    #agent.run(question)
+
+    # 注册Calculator工具（新增）
+    calculator_desc = "一个安全的数学计算器工具。当你需要解决数学计算问题（如加减乘除、幂运算、三角函数等）时，应使用此工具。参数需为合法的数学表达式（如(123+456)*789/12）。"
+    tool_executor.registerTool("Calculator", calculator_desc, calculator)
+
+    # 测试2：新增Calculator工具场景
+    print("\n===== 测试2：Calculator工具调用 =====")
+    question2 = "计算 (100 + 200) × 300 ÷ 10 的结果是多少？"
+    agent = ReActAgent(llm_client=llm, tool_executor=tool_executor)
+    agent.run(question2)

@@ -29,11 +29,18 @@ class SearchState(TypedDict):
     step: str             # 当前步骤
 
 # 初始化模型和Tavily客户端
+# llm = ChatOpenAI(
+#     model=os.getenv("LLM_MODEL_ID", "gpt-4o-mini"),
+#     api_key=os.getenv("LLM_API_KEY"),
+#     base_url=os.getenv("LLM_BASE_URL", "https://api.openai.com/v1"),
+#     temperature=0.7
+# )
+
 llm = ChatOpenAI(
-    model=os.getenv("LLM_MODEL_ID", "gpt-4o-mini"),
-    api_key=os.getenv("LLM_API_KEY"),
-    base_url=os.getenv("LLM_BASE_URL", "https://api.openai.com/v1"),
-    temperature=0.7
+    model=os.getenv("LLM_MODEL_ID", "ZhipuAI/GLM-4.7"),
+    openai_api_key=os.getenv("LLM_API_KEY"),  # 用 openai_api_key 而不是 api_key
+    openai_api_base=os.getenv("LLM_BASE_URL"),  # 用 openai_api_base 而不是 base_url
+    temperature=0.7,
 )
 
 # 初始化Tavily客户端
@@ -60,7 +67,10 @@ def understand_query_node(state: SearchState) -> SearchState:
 搜索词：[最佳搜索关键词]"""
 
     response = llm.invoke([SystemMessage(content=understand_prompt)])
-    
+    #格式
+    #response = llm.invoke([HumanMessage(content=understand_prompt)])
+
+
     # 提取搜索关键词
     response_text = response.content
     search_query = user_message  # 默认使用原始查询
@@ -142,7 +152,8 @@ def generate_answer_node(state: SearchState) -> SearchState:
 请提供一个有用的回答，并说明这是基于已有知识的回答。"""
         
         response = llm.invoke([SystemMessage(content=fallback_prompt)])
-        
+        #格式
+        #response = llm.invoke([HumanMessage(content=fallback_prompt)])
         return {
             "final_answer": response.content,
             "step": "completed",
@@ -165,7 +176,9 @@ def generate_answer_node(state: SearchState) -> SearchState:
 5. 如果搜索结果不够完整，请说明并提供补充建议"""
 
     response = llm.invoke([SystemMessage(content=answer_prompt)])
-    
+    #格式
+    #response = llm.invoke([HumanMessage(content=answer_prompt)])
+
     return {
         "final_answer": response.content,
         "step": "completed",
